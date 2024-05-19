@@ -148,4 +148,22 @@ BEGIN
                       workspace.mileageline ml 
                  WHERE ml.name ILIKE ''CRUCE NN (NN) - %''
                  AND ST_DWithin(st_startpoint(ml.wkb_geometry), loc.wkb_geometry, 0.025) 
-                 AND st_intersects(c.wkb_geometry, loc.wkb_geometry
+                 AND st_intersects(c.wkb_geometry,loc.wkb_geometry) = FALSE 
+                 AND st_intersects(st_endpoint(ml.wkb_geometry),st_buffer(loc.wkb_geometry,0.025)) 
+                 AND st_geometrytype(ml.wkb_geometry)=''ST_LineString'' 
+                 AND ml.calculated = false
+                 order by st_distance(loc.wkb_geometry,st_endpoint(ml.wkb_geometry)) asc
+                 ) resp
+                 WHERE 
+                    resp.ogc_fid = workspace.mileageline.ogc_fid AND workspace.mileageline.calculated = false AND workspace.mileageline.name ilike ''% - CRUCE NN (NN)''';
+
+/*finalizo actualizando el estado de calculado a todas las lineas de kilometraje con valor de name no vacio*/
+EXECUTE 'UPDATE workspace.mileageline SET calculated = true, name = unaccent(name) where st_geometrytype(wkb_geometry)= ''ST_LineString'' AND calculated = false AND (name is not null or name <>'''')';
+
+rol := true;
+ 
+RETURN rol;    
+    
+END;                 
+
+$BODY$;
