@@ -13,3 +13,8 @@ La función se encarga de actualizar los nombres de las líneas de kilometraje e
 
 - calculateintersections
 La función está diseñada para mejorar la representación geoespacial de la infraestructura vial en un área específica, identificando intersecciones significativas entre los caminos y los centros poblado
+
+
+## License
+
+[BSD](https://en.wikipedia.org/wiki/BSD_licenses)
